@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="jp">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
     <title>マルチ・カレンダー</title>
-</head>
-<body>
-    
-</body>
-    <script>
-        // script タグ内に JavaScript のコードを記述してください
-        
-    </script>
+  </head>
+  <body>
+    <section>{% include "./components/sidebar.html" %}</section>
+    <section>{% include "./components/calendar.html" %}</section>
+    <section>{% include "./components/popup.html" %}</section>
+  </body>
 </html>
