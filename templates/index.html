@@ -1,15 +1,60 @@
 <!DOCTYPE html>
 <html lang="jp">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>マルチ・カレンダー</title>
+    <title>FullCalendar デモ</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .calendar {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
-    
-</body>
+    <h1>マルチ・カレンダー</h1>
+    <div class="calendar"></div>
+
     <script>
-        // script タグ内に JavaScript のコードを記述してください
-        
+        document.addEventListener('DOMContentLoaded', function() {
+            const calendarEl = document.querySelector('.calendar');
+            
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth', // 月表示
+                locale: 'ja', // 日本語ローカル設定
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,dayGridWeek,dayGridDay'
+                },
+                events: [
+                    // ここにイベントデータを追加
+                    {
+                        title: 'イベント1',
+                        start: '2025-01-10'
+                    },
+                    {
+                        title: 'イベント2',
+                        start: '2025-01-15',
+                        end: '2025-01-17'
+                    },
+                    {
+                        title: '終日イベント',
+                        start: '2025-01-20',
+                        allDay: true
+                    }
+                ]
+            });
+
+            calendar.render();
+        });
     </script>
+</body>
 </html>
