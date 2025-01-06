@@ -12,7 +12,11 @@
 
 
 <div>今日の予定</div>
-<div id="today-event"></div>
+<div>
+    <ul id="today-event">
+        <!-- ここにチェックボックスで選択されたユーザーの予定を箇条書きかつ色付きで表示 -->
+    </ul>
+</div>
 <!-- pass 考えること="チェックボックスからユーザをどうとる？ 今日の予定をどう抽出する？" -->
 
 <button onclick="">ファイルに出力</button>
@@ -21,19 +25,33 @@
     // チェックボックスの変更を検知して，関数 update() を呼び出す
     document.body.addEventListener('change', update);
 
+    // ユーザー情報を配列に格納（0: 名前，1: 色）
+    const users = [
+        {% for user in users %}
+        ['{{ user.user }}', '{{ user.color }}'],
+        {% endfor %}
+    ]
+
     function update() {
         // チェックボックスの状態を取得
         var checkboxes = document.getElementsByClassName('user-button');
         var checkedUsers = [];
         for (var i = 0; i < checkboxes.length; i++) {
             if (checkboxes[i].checked) {
-                checkedUsers.push(checkboxes[i].parentNode.textContent);
+                checkedUsers.push([users[i][0], users[i][1]]);
             }
         }
 
         // id="today-event" の要素を取得して，中身を更新
         var todayEvent = document.getElementById('today-event');
-        todayEvent.innerHTML = checkedUsers.join('<br>');
+        todayEvent.innerHTML = '';
+        for (var i = 0; i < checkedUsers.length; i++) {
+            var user = checkedUsers[i];
+            var userEvent = document.createElement('li');
+            userEvent.style.color = user[1];
+            userEvent.textContent = user[0];
+            todayEvent.appendChild(userEvent);
+        }
     }
 
     // チェックボックスの全選択・全解除を行う関数
@@ -47,28 +65,3 @@
     }
 
 </script>
-
-
-
-
-
-<!-- ＝＝＝＝＝＝＝
-
-<label><input type="checkbox" class="checkbox" value="1"> チェックボックス 1</label><br>
-    <label><input type="checkbox" class="checkbox" value="2"> チェックボックス 2</label><br>
-    <label><input type="checkbox" class="checkbox" value="3"> チェックボックス 3</label><br>
-    <label><input type="checkbox" class="checkbox" value="4"> チェックボックス 4</label><br>
-    <label><input type="checkbox" class="checkbox" value="5"> チェックボックス 5</label><br>
-
-    <h3>有効なチェックボックスの番号:</h3>
-    <p id="active-numbers">なし</p>
-
-    <script>
-        document.body.addEventListener('change', () => {
-            const activeNumbers = Array.from(document.querySelectorAll('.checkbox:checked'))
-                .map(cb => cb.value);
-            document.getElementById('active-numbers').textContent = activeNumbers.length > 0 
-                ? activeNumbers.join(', ') 
-                : 'なし';
-        });
-    </script> -->
