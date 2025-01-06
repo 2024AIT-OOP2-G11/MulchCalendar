@@ -1,3 +1,74 @@
-<div>サイドバー</div>
+<h3>サイドバー</h3>
+<!-- 細かな仕様はユーシンに任せます^^ -->
 <a href="{{ url_for('user.add') }}">ユーザー登録</a>
 <a href="{{ url_for('user.list') }}">ユーザー一覧</a>
+
+<div>ユーザー選択</div>
+<input type="checkbox" class="allselect-button" onclick="checkForAll()">全員
+{% for user in users %}
+<!-- ↓ VSCode だと，赤い波線が出るかも？ 問題なく動作するはず -->
+<div style="color: {{ user.color }};"><input type="checkbox" class="user-button">{{ user.user }}</div>
+{% endfor %}
+
+
+<div>今日の予定</div>
+<div id="today-event"></div>
+<!-- pass 考えること="チェックボックスからユーザをどうとる？ 今日の予定をどう抽出する？" -->
+
+<button onclick="">ファイルに出力</button>
+
+<script>
+    // チェックボックスの変更を検知して，関数 update() を呼び出す
+    document.body.addEventListener('change', update);
+
+    function update() {
+        // チェックボックスの状態を取得
+        var checkboxes = document.getElementsByClassName('user-button');
+        var checkedUsers = [];
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                checkedUsers.push(checkboxes[i].parentNode.textContent);
+            }
+        }
+
+        // id="today-event" の要素を取得して，中身を更新
+        var todayEvent = document.getElementById('today-event');
+        todayEvent.innerHTML = checkedUsers.join('<br>');
+    }
+
+    // チェックボックスの全選択・全解除を行う関数
+    function checkForAll() {
+        var checked = document.querySelector('.allselect-button').checked;
+        var checkboxes = document.getElementsByClassName('user-button');
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = checked;
+        }
+    }
+
+</script>
+
+
+
+
+
+<!-- ＝＝＝＝＝＝＝
+
+<label><input type="checkbox" class="checkbox" value="1"> チェックボックス 1</label><br>
+    <label><input type="checkbox" class="checkbox" value="2"> チェックボックス 2</label><br>
+    <label><input type="checkbox" class="checkbox" value="3"> チェックボックス 3</label><br>
+    <label><input type="checkbox" class="checkbox" value="4"> チェックボックス 4</label><br>
+    <label><input type="checkbox" class="checkbox" value="5"> チェックボックス 5</label><br>
+
+    <h3>有効なチェックボックスの番号:</h3>
+    <p id="active-numbers">なし</p>
+
+    <script>
+        document.body.addEventListener('change', () => {
+            const activeNumbers = Array.from(document.querySelectorAll('.checkbox:checked'))
+                .map(cb => cb.value);
+            document.getElementById('active-numbers').textContent = activeNumbers.length > 0 
+                ? activeNumbers.join(', ') 
+                : 'なし';
+        });
+    </script> -->
