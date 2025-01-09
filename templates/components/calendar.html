@@ -1,5 +1,18 @@
 <div>カレンダー</div>
 <div class="calendar"></div>
+
+<div id="event-popup" style="display: none;">
+    <p>イベントを追加します。</p>
+    <label for="event-title">タイトル:</label>
+    <input type="text" id="event-title">
+    <label for="event-start">開始日:</label>
+    <input type="date" id="event-start">
+    <label for="event-end">終了日:</label>
+    <input type="date" id="event-end">
+    <button id="add-event">追加</button>
+    <button id="cancel-event">キャンセル</button>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
             const calendarEl = document.querySelector('.calendar');
