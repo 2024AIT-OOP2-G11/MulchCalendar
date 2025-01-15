@@ -28,18 +28,39 @@
                         title: '終日イベント',
                         start: '2025-01-20',
                         allDay: true
+                        
                     }
                 ],
-                dateClick: (e)=>{// 日付マスのクリックイベント
-                console.log("dateClick:", e);
+                dateClick: (e)=>{  // 日付マスのクリックイベント
+                    // console.log("dateClick:", e);
+                    
                 },
-                eventClick: (e)=>{// イベントのクリックイベント
-                console.log("eventClick:", e.event.title);
-            }
-                
+                eventClick: (e)=>{  // イベントのクリックイベント
+                    // イベントIDの表示
+                    console.log("eventClick:", e.event.id);
+                    clickedEvent = e.event;
+
+                    const popupEdit = document.getElementById('popup-edit');
+                    popupEdit.style.display = 'flex';
+
+                    // イベントの日付の表示
+                    const date = document.getElementById('date');
+                    date.textContent = clickedEvent.start.toLocaleDateString();
+
+                    // 編集フォームの設定
+                    const ediForm = document.getElementById('edi');
+                    const baseEdiUrl = "{{ url_for('api.edit', event_id=-1) }}";
+                    ediForm.action = baseEdiUrl.replace("-1", clickedEvent.id);
+                    const inputEvent = document.getElementById('inputEvent');
+                    inputEvent.value = clickedEvent.title;
+                    const delForm = document.getElementById('del');
+                    const baseDelUrl = "{{ url_for('api.delete', event_id=-1) }}";
+                    delForm.action = baseDelUrl.replace("-1", clickedEvent.id);
+                }
             });
 
             calendar.render();
         });
-        
+
+        var clickedEvent;
 </script>
