@@ -4,9 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ユーザー登録</title>
+    <style>
+        .breadcrumb {
+            padding: 0;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+        .breadcrumb li {
+            display: inline;
+        }
+        .breadcrumb li::after {
+            content: " > ";
+        }
+        .breadcrumb li:nth-last-child()::after {
+            content: "";
+        }
+    </style>
 </head>
 <body>
     <h1>ユーザーを登録</h1>
+    <ul class="breadcrumb">
+        <li><a href="{{ url_for('index') }}">HOME</a></li>
+        <li>ユーザー登録</li>
+    </ul>
+
     <form action="{{ url_for('user.add') }}"  method="post">
         <label>ユーザー名: <input type="text" name="user" required></label><br>
         <label>ユーザーカラー: <input type="color" name="color" required></label><br>

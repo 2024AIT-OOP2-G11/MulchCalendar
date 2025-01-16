@@ -22,3 +22,18 @@ def add():
         return redirect(url_for('index'))
     
     return render_template('user_add.html')
+
+@user_bp.route('/edit', methods=['GET', 'POST'])
+def edit():
+    users = User.select()
+    
+    if request.method == 'POST':
+        print("flflfg")
+        user_id = request.form['user_id']
+        user = User.get_or_none(User.id == user_id)
+        user.user = request.form['user']
+        user.color = request.form['color']
+        user.save()
+        return redirect(url_for('user.edit'))
+    
+    return render_template('user_edit.html',items=users)

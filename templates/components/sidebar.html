@@ -1,7 +1,14 @@
 <h3>サイドバー</h3>
-<!-- 細かな仕様はユーシンに任せます^^ -->
-<a href="{{ url_for('user.add') }}">ユーザー登録</a>
-<a href="{{ url_for('user.list') }}">ユーザー一覧</a>
+<div id="user">
+    <li class="user-point">
+        ユーザー登録
+        <ul class="user-list">
+            <li linkdata="/users/add">ユーザー追加</li>
+            <li linkdata="/users/edit">ユーザー編集</li>
+            <li>ユーザー削除</li>
+        </ul>
+    </li>
+</div>
 
 <div>ユーザー選択</div>
 <input type="checkbox" class="allselect-button" onclick="checkForAll()">全員
@@ -21,6 +28,21 @@
 <script src="https://cdn.jsdelivr.net/gh/nwcell/ics.js/ics.deps.min.js"></script>
 
 <script>
+    const listItems = document.querySelectorAll('#user li');
+
+    listItems.forEach( item => {
+        item.addEventListener('click', event => {
+            const link = event.target.getAttribute('linkdata');
+            if(link) {
+                window.location.href = link;
+            }
+        });
+    });
+
+
+
+
+
     // チェックボックスの変更を検知して，関数 update() を呼び出す
     document.body.addEventListener('change', update);
 
