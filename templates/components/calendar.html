@@ -1,7 +1,7 @@
 <div>カレンダー</div>
 <div class="calendar"></div>
 
-<div id="event-popup" style="display: none;">
+<div id="event-popup" style="display: block;;">
     <p>イベントを追加します。</p>
     <label for="event-title">タイトル:</label>
     <input type="text" id="event-title">
@@ -42,38 +42,12 @@
                         allDay: true
                     }
                 ],
-                dateClick: (e)=>{// 日付マスのクリックイベント
-                console.log("dateClick:", e);
-                //イベントを追加するコード
-                // ポップアップを表示
-                document.getElementById('event-popup').style.display = 'block';
-
-                // 追加ボタンをクリックしたときの処理
-                document.getElementById('add-event').addEventListener('click', () => {
-                    const title = document.getElementById('event-title').value;
-                    const start = document.getElementById('event-start').value;
-                    const end = document.getElementById('event-end').value;
-
-                // 新しいイベントを作成
-                const newEvent = {
-                    title: title,
-                    start: start,
-                    end: end
-                };
-
-                // カレンダーにイベントを追加
-                calendar.addEvent(newEvent);
-
-                // ポップアップを非表示
-                document.getElementById('event-popup').style.display = 'none';
-                });
-
-                // キャンセルボタンをクリックしたときの処理
-                document.getElementById('cancel-event').addEventListener('click', () => {
-                    // ポップアップを非表示
-                    document.getElementById('event-popup').style.display = 'none';
-                });
-                },
+                // 日付マスのクリックイベント
+                // 日付マスのクリックイベント
+                dateClick: (e)=>{
+                const popupAdd = document.getElementById('popup-add');
+                popupAdd.style.display = 'flex';
+            },
                 eventClick: (e)=>{// イベントのクリックイベント
                 console.log("eventClick:", e.event.title);
             }
