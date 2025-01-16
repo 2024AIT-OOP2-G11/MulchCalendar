@@ -1,3 +1,63 @@
 <!-- ポップアップの具体的なデータ取得方法が思い付いてないので、もしかしたらファイル構成変えるかもしれない -->
 <script></script>
-<div>ポップアップ</div>
+<!-- <div>ポップアップ</div> -->
+
+<style>
+    .popup-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 100;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .popup-content {
+        /* display: flex; */
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        padding: 20px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        /* width: 50%;
+        height: 50%; */
+        background-color: white;
+        z-index: 101;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+</style>
+
+<div class="popup-overlay" id="popup-edit">
+    <div class="popup-content">
+        <h3>編集</h3>
+        <div id="date">
+            <!-- ここに日付を表示 -->
+        </div>
+        <form method="post" id="edi">
+            <input type="text" id="inputEvent" required>
+            <button type="submit">変更</button>
+        </form>
+        <br>
+        <form method="post" id="del">
+            <button type="submit" onclick="return confirm('本当に削除しますか？');">削除</button>
+        </form>
+    </div>
+    
+</div>
+
+<script>
+    // popup-overlayのクリックイベント
+    const popupOverlay = document.querySelector('.popup-overlay');
+    popupOverlay.addEventListener('click', (e) => {
+        if (e.target === popupOverlay) {
+            popupOverlay.style.display = 'none';
+        }
+    });
+</script>
