@@ -2,65 +2,66 @@
 <div>カレンダー</div>
 <div class="calendar"></div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-            const calendarEl = document.querySelector('.calendar');
+  document.addEventListener("DOMContentLoaded", function () {
+    const calendarEl = document.querySelector(".calendar");
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: "dayGridMonth", // 月表示
+      locale: "ja", // 日本語ローカル設定
+      headerToolbar: {
+        left: "prev,next today",
+        center: "title",
+        right: "dayGridMonth,dayGridWeek,dayGridDay",
+      },
+      events: function (info, successCallback, failureCallback) {
+        // Flask APIからイベントデータを取得
+        fetch("/api/events")
+          .then((response) => response.json())
+          .then((data) => {
+            // イベントデータをFullCalendarに渡す
+            successCallback(data);
+          })
+          .catch((error) => {
+            console.error("Error fetching events:", error);
+            failureCallback(error);
+          });
+      },
+      dateClick: (e) => {
+        // 日付マスのクリックイベント
+        console.log("dateClick:", e);
+      },
+      eventClick: (e) => {
+        // イベントのクリックイベント
+        console.log("eventClick:", e.event.title);
+        // イベントIDの表示
+        console.log("eventClick:", e.event.id);
+        clickedEvent = e.event;
 
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth', // 月表示
-                locale: 'ja', // 日本語ローカル設定
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,dayGridWeek,dayGridDay'
-                },
-                events: [
-                    // ここにイベントデータを追加
-                    {
-                        title: 'イベント1',
-                        start: '2025-01-10'
-                    },
-                    {
-                        title: 'イベント2',
-                        start: '2025-01-15',
-                        end: '2025-01-17'
-                    },
-                    {
-                        title: '終日イベント',
-                        start: '2025-01-20',
-                        allDay: true
-                        
-                    }
-                ],
-                dateClick: (e)=>{  // 日付マスのクリックイベント
-                    // console.log("dateClick:", e);
-                    
-                },
-                eventClick: (e)=>{  // イベントのクリックイベント
-                    // イベントIDの表示
-                    console.log("eventClick:", e.event.id);
-                    clickedEvent = e.event;
+        const popupEdit = document.getElementById('popup-edit');
+        popupEdit.style.display = 'flex';
 
-                    const popupEdit = document.getElementById('popup-edit');
-                    popupEdit.style.display = 'flex';
+        // イベントの日付の表示
+        const date = document.getElementById('date');
+        date.textContent = clickedEvent.start.toLocaleDateString();
 
-                    // イベントの日付の表示
-                    const date = document.getElementById('date');
-                    date.textContent = clickedEvent.start.toLocaleDateString();
+        // 編集フォームの設定
+        const ediForm = document.getElementById('edi');
+        const baseEdiUrl = "{{ url_for('api.edit', event_id=-1) }}";
+        ediForm.action = baseEdiUrl.replace("-1", clickedEvent.id);
+        const inputEvent = document.getElementById('inputEvent');
+        inputEvent.value = clickedEvent.title;
+        const delForm = document.getElementById('del');
+        const baseDelUrl = "{{ url_for('api.delete', event_id=-1) }}";
+        delForm.action = baseDelUrl.replace("-1", clickedEvent.id);
+      },
+    });
 
-                    // 編集フォームの設定
-                    const ediForm = document.getElementById('edi');
-                    const baseEdiUrl = "{{ url_for('api.edit', event_id=-1) }}";
-                    ediForm.action = baseEdiUrl.replace("-1", clickedEvent.id);
-                    const inputEvent = document.getElementById('inputEvent');
-                    inputEvent.value = clickedEvent.title;
-                    const delForm = document.getElementById('del');
-                    const baseDelUrl = "{{ url_for('api.delete', event_id=-1) }}";
-                    delForm.action = baseDelUrl.replace("-1", clickedEvent.id);
-                }
-            });
-
-            calendar.render();
-        });
-
-        var clickedEvent;
+    calendar.render();
+  });
 </script>
+
+
+
+
+
+
+

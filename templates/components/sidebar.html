@@ -17,7 +17,8 @@
     </ul>
 </div>
 
-<button onclick="">ファイルに出力</button>
+<button id="download-btn">ファイルに出力</button>
+<script src="https://cdn.jsdelivr.net/gh/nwcell/ics.js/ics.deps.min.js"></script>
 
 <script>
     // チェックボックスの変更を検知して，関数 update() を呼び出す
@@ -37,6 +38,13 @@
         ['{{ event.title }}', '{{ event.start }}', '{{ event.end }}', ['{{ event.user.user }}', '{{ event.user.color }}']],
         {% endfor %}
     ]
+    /*const events = [
+        ['イベント2','2025-01-15','2025-01-17',['jo','#000000']],
+        ['イベント1','2025-01-10','',['jo','#000000']],
+        ['終日イベント','2025-01-20','',['fe','#ff0000']],
+        ['終日イベント','2025-01-30','',['fe','#ff0000']],
+    ]*/
+    var user = []
 
     function update() {
         // チェックボックスの状態を取得
@@ -47,6 +55,7 @@
                 checkedUsers.push([users[i][0], users[i][1]]);
             }
         }
+        user = checkedUsers
 
         // 予定の開始日が今日であり，かつチェックボックスで選択されたユーザーの予定を抽出
         var today = new Date();
@@ -85,5 +94,24 @@
             checkboxes[i].checked = checked;
         }
     }
+
+    //出力ボタンが押された時
+    document.getElementById('download-btn').addEventListener('click', () => {
+        var cal =ics();
+	    //cal.addEvent('Demo Event', 'This is thirty minute event', 'Nome, AK', '8/7/2013 5:30 pm', '8/7/2013 6:00 pm');
+        //for (let i = 0;i < 2;i++)
+        //cal.addEvent(event[i][0],event[i][1],event[i][2],event[i][3],event[i][4]);
+        for (var i = 0; i < events.length; i++) {
+            var event = events[i];
+            if(event[3][0]==user[0][0]){
+                var elm = event[1].split('-');
+                var start = elm[1] + '/' + elm[2] + '/' + elm[0]; 
+                console.log(start);
+                cal.addEvent(event[0],'','',start,start);
+            }
+        }
+        console.log(cal);
+        cal.download("Event");
+    });
 
 </script>
