@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>編集</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .popup button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .popup button:hover {
+            background-color: #0056b3;
+        }
+
+        .popup-header {
+            margin-bottom: 20px;
+        }
+        .breadcrumb {
+            padding: 0;
+            margin-bottom: 2rem;
+            list-style: none;
+        }
+        .breadcrumb li {
+            display: inline;
+        }
+        .breadcrumb li::after {
+            content: " > ";
+        }
+        .breadcrumb li:nth-last-child()::after {
+            content: "";
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>ユーザー</th>
+                <th>色</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+        <tbody>
+            <h1>ユーザー編集</h1>
+            <ul class="breadcrumb">
+                <li><a href="{{ url_for('index') }}">HOME</a></li>
+                <li>ユーザー編集</li>
+            </ul>
+
+            {% for user in items %}
+            <tr>
+                <td>{{ user.user }}</td>
+                <td><div style="background-color: {{ user.color }}; width: 47px; height: 22px;"></div></td>
+                <td>
+                    <button class="open-popup" data-id="{{ user.id }}">編集</button>
+                </td>
+            </tr>
+            {% endfor %}
+
+
+            <div class="popup-overlay" id="popupOverlay">
+                <div class="popup">
+                    <div class="popup-header">
+                        <form id="editForm" action="" method="post">
+                            <input type="hidden" name="user_id" value="">
+                            <label>ユーザー名: <input type="text" name="user" required></label>
+                            <br>
+                            <label>カラー: <input type="color" name="color" ></label>
+                            <br>
+                            <button id="updateData" type="submit">保存</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const popupOverlay = document.getElementById('popupOverlay');
+                    const editForm = document.getElementById('editForm');
+                    const inputUser = document.querySelector('input[name="user"]');
+                    const inputColor = document.querySelector('input[name="color"]');
+                    const hiddenUserIdInput = document.querySelector('input[name="user_id"]'); // 隠し要素を取得
+
+                    document.querySelectorAll('.open-popup').forEach(button => {
+                        button.addEventListener('click', async (event) => {
+                            popupOverlay.style.display = 'flex';
+                            const userId = event.target.dataset.id;
+
+                            // サーバーからユーザーデータを取得
+                            const response = await fetch(`/api/user/${userId}`); 
+                            if (response.ok) {
+                                const data = await response.json();
+
+                                // ユーザー名とカラーをフォームに反映
+                                inputUser.value = data.user;
+                                inputColor.value = data.color;
+                                hiddenUserIdInput.value = userId
+
+                                // フォームの送信先を更新
+                                editForm.action = "/users/edit";
+                                // ポップアップを表示
+                                popupOverlay.style.display = 'flex';
+                            } else {
+                                alert('データの取得に失敗しました');
+                            }
+                        });
+                    });
+
+                    popupOverlay.addEventListener('click', (event) => {
+                        if (event.target === popupOverlay) {
+                            popupOverlay.style.display = 'none';
+                        }
+                    });
+                });
+
+            </script>
+        </tbody>
+    </table>
+    
+</body>
+</html>

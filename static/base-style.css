@@ -1,0 +1,72 @@
+/* メインメニューのスタイル */
+#user {
+    width: 200px;
+    background: #fff;
+    border: 1px solid #ccc;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    position: relative;
+}
+
+#user ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#user li {
+    list-style: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    position: relative;
+}
+
+#user li:hover {
+    background: #f0f0f0;
+}
+
+/* サブメニューの非表示・表示 */
+.user-list {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 200px;
+    background: #fff;
+    border: 1px solid #ccc;
+    width: 200px;
+    z-index: 1001;
+}
+
+/* .user-point:hover > .user-list,
+.user-list > li:hover > .user-list,
+.user-list input:focus {
+    display: block;
+} */
+
+.user-point:hover > .user-list,
+.user-point:focus-within > .user-list,
+.user-list > li:hover > .user-list,
+.user-list:focus-within {
+  display: block;
+}
+
+/* テキストボックスにフォーカスがあるとき他の子要素を無効化 */
+.user-list:focus-within li:not(:has(input:focus)) {
+    pointer-events: none; /* 他の子要素のホバーを無効化 */
+}
+
+/* 追加ボタンを例外として有効にする */
+.user-list:focus-within button {
+    pointer-events: auto; /* ボタンは有効化 */
+}
+
+.user-list li {
+    padding: 8px 16px;
+    border-bottom: 1px solid #eee;
+}
+
+.user-list li:hover {
+    background: #f0f0f0;
+}
+
