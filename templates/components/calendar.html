@@ -2,44 +2,40 @@
 <div>カレンダー</div>
 <div class="calendar"></div>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-            const calendarEl = document.querySelector('.calendar');
+  document.addEventListener("DOMContentLoaded", function () {
+    const calendarEl = document.querySelector(".calendar");
 
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth', // 月表示
-                locale: 'ja', // 日本語ローカル設定
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,dayGridWeek,dayGridDay'
-                },
-                events: [
-                    // ここにイベントデータを追加
-                    {
-                        title: 'イベント1',
-                        start: '2025-01-10'
-                    },
-                    {
-                        title: 'イベント2',
-                        start: '2025-01-15',
-                        end: '2025-01-17'
-                    },
-                    {
-                        title: '終日イベント',
-                        start: '2025-01-20',
-                        allDay: true
-                    }
-                ],
-                dateClick: (e)=>{// 日付マスのクリックイベント
-                console.log("dateClick:", e);
-                },
-                eventClick: (e)=>{// イベントのクリックイベント
-                console.log("eventClick:", e.event.title);
-            }
-                
-            });
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: "dayGridMonth", // 月表示
+      locale: "ja", // 日本語ローカル設定
+      headerToolbar: {
+        left: "prev,next today",
+        center: "title",
+        right: "dayGridMonth,dayGridWeek,dayGridDay",
+      },
+      events: function (info, successCallback, failureCallback) {
+        // Flask APIからイベントデータを取得
+        fetch("/api/events")
+          .then((response) => response.json())
+          .then((data) => {
+            // イベントデータをFullCalendarに渡す
+            successCallback(data);
+          })
+          .catch((error) => {
+            console.error("Error fetching events:", error);
+            failureCallback(error);
+          });
+      },
+      dateClick: (e) => {
+        // 日付マスのクリックイベント
+        console.log("dateClick:", e);
+      },
+      eventClick: (e) => {
+        // イベントのクリックイベント
+        console.log("eventClick:", e.event.title);
+      },
+    });
 
-            calendar.render();
-        });
-        
+    calendar.render();
+  });
 </script>
