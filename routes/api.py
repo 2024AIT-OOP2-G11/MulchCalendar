@@ -1,4 +1,4 @@
-from flask import Blueprint,jsonify
+from flask import Blueprint,jsonify, redirect, url_for, request
 from models import Event
 
 api_bp = Blueprint("api", __name__, url_prefix='/api')
@@ -20,3 +20,25 @@ def get_events():
         'borderColor': event.user.color,
         
     } for event in events])
+
+@api_bp.route('/delete/<int:event_id>', methods=['POST'])
+def delete(event_id):
+    # 指定されたIDの予定を取得
+    event = Event.get_or_none(Event.id == event_id)
+    if event:
+        event.delete_instance()  # 予定を削除
+    # indexページにリダイレクト
+    return redirect(url_for('index'))
+
+@api_bp.route('/edit/<int:event_id>', methods=['POST'])
+def edit(event_id):
+    # 指定されたIDの予定を取得
+    event = Event.get_or_none(Event.id == event_id)
+    if event:
+        # リクエストのデータを取得
+        title = request.form['title']
+        # データを更新
+        event.title = title
+        event.save()
+    # indexページにリダイレクト
+    return redirect(url_for('index'))
