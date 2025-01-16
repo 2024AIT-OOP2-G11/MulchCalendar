@@ -1,4 +1,4 @@
-# MulchCalendar
+# MultiCalendar
 ## マルチユーザに対応したカレンダー・アプリケーション
 
 ### 仕様
