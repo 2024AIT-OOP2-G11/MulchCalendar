@@ -37,7 +37,34 @@
             <label for="event-end">終了日:</label>
             <input type="date" id="event-end">
             <button id="add-event">追加</button>
-            <button id="cancel-event">キャンセル</button>
+            <script>
+                const addEventButton = document.getElementById('add-event');
+                addEventButton.addEventListener('click', () => {
+                    // ポップアップに入力された値を取得
+                    const title = document.getElementById('event-title').value;
+                    const start = document.getElementById('event-start').value;
+                    const end = document.getElementById('event-end').value;
+
+                    // APIにイベント情報をPOST
+                    fetch('/api/events', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ title, start, end })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        // 成功時: カレンダーを更新
+                        calendar.refetchEvents();
+                        popupOverlay.style.display = 'none';
+                    })
+                    .catch(error => {
+                        // エラー処理
+                        console.error('Error:', error);
+                    });
+                });
+            </script>
         </div>
     </div>
 </div>
