@@ -33,17 +33,17 @@
     ]
     // 予定情報を配列に格納（0: 予定名，1: 開始日，2: 終了日，3: ユーザー）
     // Event.create(title='サンプルイベント１', start='2025-01-07 00:00:00', end='2025-01-07 01:00:00', user=users[0]) のようなデータ構造を想定
-    /*const events = [
+    const events = [
         {% for event in events %}
         ['{{ event.title }}', '{{ event.start }}', '{{ event.end }}', ['{{ event.user.user }}', '{{ event.user.color }}']],
         {% endfor %}
-    ]*/
-    const events = [
+    ]
+    /*const events = [
         ['イベント2','2025-01-15','2025-01-17',['jo','#000000']],
         ['イベント1','2025-01-10','',['jo','#000000']],
         ['終日イベント','2025-01-20','',['fe','#ff0000']],
         ['終日イベント','2025-01-30','',['fe','#ff0000']],
-    ]
+    ]*/
     var user = []
 
     function update() {
