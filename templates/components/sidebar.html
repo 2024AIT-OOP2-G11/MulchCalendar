@@ -1,141 +1,159 @@
 <div class="sidebar">
-<h3>サイドバー</h3>
-<div id="user">
+  <h3>サイドバー</h3>
+  <div id="user">
     <li class="user-point">
-        ユーザー登録
-        <ul class="user-list">
-            <li linkdata="/users/add">ユーザー追加</li>
-            <li linkdata="/users/edit">ユーザー編集</li>
-            <li>ユーザー削除</li>
-        </ul>
+      ユーザー登録
+      <ul class="user-list">
+        <li linkdata="/users/add">ユーザー追加</li>
+        <li linkdata="/users/edit">ユーザー編集</li>
+        <li>ユーザー削除</li>
+      </ul>
     </li>
-</div>
+  </div>
 
-<div>ユーザー選択</div>
-<input type="checkbox" class="allselect-button" onclick="checkForAll()">全員
-{% for user in users %}
-<!-- ↓ VSCode だと，赤い波線が出るかも？ 問題なく動作するはず -->
-<div style="color: {{ user.color }};"><input type="checkbox" class="user-button">{{ user.user }}</div>
-{% endfor %}
+  <div>ユーザー選択</div>
+  <input type="checkbox" class="allselect-button" onclick="checkForAll()" />全員
+  {% for user in users %}
+  <!-- ↓ VSCode だと，赤い波線が出るかも？ 問題なく動作するはず -->
+  <div style="color: {{ user.color }};">
+    <input type="checkbox" class="user-button" onclick="checks()" />{{ user.user
+    }}
+  </div>
+  {% endfor %}
 
-<div>今日の予定</div>
-<div>
+  <div>今日の予定</div>
+  <div>
     <ul id="today-event">
-        <!-- ここにチェックボックスで選択されたユーザーの予定を箇条書きかつ色付きで表示 -->
+      <!-- ここにチェックボックスで選択されたユーザーの予定を箇条書きかつ色付きで表示 -->
     </ul>
-</div>
+  </div>
 
-<button id="download-btn">ファイルに出力</button>
-<script src="https://cdn.jsdelivr.net/gh/nwcell/ics.js/ics.deps.min.js"></script>
-
+  <button id="download-btn">ファイルに出力</button>
+  <script src="https://cdn.jsdelivr.net/gh/nwcell/ics.js/ics.deps.min.js"></script>
 </div>
 <script>
-    const listItems = document.querySelectorAll('#user li');
+  const listItems = document.querySelectorAll('#user li');
 
-    listItems.forEach( item => {
-        item.addEventListener('click', event => {
-            const link = event.target.getAttribute('linkdata');
-            if(link) {
-                window.location.href = link;
+  listItems.forEach( item => {
+      item.addEventListener('click', event => {
+          const link = event.target.getAttribute('linkdata');
+          if(link) {
+              window.location.href = link;
+          }
+      });
+  });
+
+
+
+
+
+  // チェックボックスの変更を検知して，関数 update() を呼び出す
+  document.body.addEventListener('change', update);
+
+  // ↓ VSCode だと，赤い波線が出るかも？ 問題なく動作するはず
+  // ユーザー情報を配列に格納（0: 名前，1: 色）
+  const users = [
+      {% for user in users %}
+      ['{{ user.user }}', '{{ user.color }}'],
+      {% endfor %}
+  ]
+  // 予定情報を配列に格納（0: 予定名，1: 開始日，2: 終了日，3: ユーザー）
+  // Event.create(title='サンプルイベント１', start='2025-01-07 00:00:00', end='2025-01-07 01:00:00', user=users[0]) のようなデータ構造を想定
+  const events = [
+      {% for event in events %}
+      ['{{ event.title }}', '{{ event.start }}', '{{ event.end }}', ['{{ event.user.user }}', '{{ event.user.color }}']],
+      {% endfor %}
+  ]
+  /*const events = [
+      ['イベント2','2025-01-15','2025-01-17',['jo','#000000']],
+      ['イベント1','2025-01-10','',['jo','#000000']],
+      ['終日イベント','2025-01-20','',['fe','#ff0000']],
+      ['終日イベント','2025-01-30','',['fe','#ff0000']],
+  ]*/
+  var user = []
+
+  function update() {
+      // チェックボックスの状態を取得
+      var checkboxes = document.getElementsByClassName('user-button');
+      var checkedUsers = [];
+      for (var i = 0; i < checkboxes.length; i++) {
+          if (checkboxes[i].checked) {
+              checkedUsers.push([users[i][0], users[i][1]]);
+          }
+      }
+      user = checkedUsers
+
+      // 予定の開始日が今日であり，かつチェックボックスで選択されたユーザーの予定を抽出
+      var today = new Date();
+      var todayEvents = [];
+      for (var i = 0; i < events.length; i++) {
+          var event = events[i];
+          var startDate = new Date(String(event[1].split(' ')[0]));
+          var endDate = new Date(event[2]);
+
+          if (startDate.getFullYear() == today.getFullYear() && startDate.getMonth() == today.getMonth() && startDate.getDate() == today.getDate()) {
+              for (var j = 0; j < checkedUsers.length; j++) {
+                  if (event[3][0] == checkedUsers[j][0]) {
+                      todayEvents.push([event, checkedUsers[j]]);
+                  }
+              }
+          }
+      }
+
+      // id="today-event" の要素を取得して，中身を更新
+      var todayEvent = document.getElementById('today-event');
+      todayEvent.innerHTML = '';
+      for (var i = 0; i < todayEvents.length; i++) {
+          var userEvent = document.createElement('li');
+          userEvent.style.color = todayEvents[i][1][1];
+          userEvent.textContent = todayEvents[i][0][0];
+          todayEvent.appendChild(userEvent);
+      }
+  }
+
+  // チェックボックスの全選択・全解除を行う関数
+  function checkForAll() {
+      var checked = document.querySelector('.allselect-button').checked;
+      var checkboxes = document.getElementsByClassName('user-button');
+
+      for (var i = 0; i < checkboxes.length; i++) {
+          checkboxes[i].checked = checked;
+      }
+  }
+  // チェックボックスが1つでも外された時の全選択解除
+  function checks() {
+    var checked = document.querySelector('.allselect-button');
+    var checkboxes = document.querySelectorAll('.user-button');
+    checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener('click', () => {
+            // 全てにチェックがされた時
+            if (document.querySelectorAll('.user-button:checked').length === checkboxes.length) {
+                checked.checked = true;
+            // チェックが1つでも外された時
+            }else {
+                checked.checked = false;
             }
         });
     });
+  }
+  document.addEventListener('DOMContentLoaded', checks);
 
-
-
-
-
-    // チェックボックスの変更を検知して，関数 update() を呼び出す
-    document.body.addEventListener('change', update);
-
-    // ↓ VSCode だと，赤い波線が出るかも？ 問題なく動作するはず
-    // ユーザー情報を配列に格納（0: 名前，1: 色）
-    const users = [
-        {% for user in users %}
-        ['{{ user.user }}', '{{ user.color }}'],
-        {% endfor %}
-    ]
-    // 予定情報を配列に格納（0: 予定名，1: 開始日，2: 終了日，3: ユーザー）
-    // Event.create(title='サンプルイベント１', start='2025-01-07 00:00:00', end='2025-01-07 01:00:00', user=users[0]) のようなデータ構造を想定
-    const events = [
-        {% for event in events %}
-        ['{{ event.title }}', '{{ event.start }}', '{{ event.end }}', ['{{ event.user.user }}', '{{ event.user.color }}']],
-        {% endfor %}
-    ]
-    /*const events = [
-        ['イベント2','2025-01-15','2025-01-17',['jo','#000000']],
-        ['イベント1','2025-01-10','',['jo','#000000']],
-        ['終日イベント','2025-01-20','',['fe','#ff0000']],
-        ['終日イベント','2025-01-30','',['fe','#ff0000']],
-    ]*/
-    var user = []
-
-    function update() {
-        // チェックボックスの状態を取得
-        var checkboxes = document.getElementsByClassName('user-button');
-        var checkedUsers = [];
-        for (var i = 0; i < checkboxes.length; i++) {
-            if (checkboxes[i].checked) {
-                checkedUsers.push([users[i][0], users[i][1]]);
-            }
-        }
-        user = checkedUsers
-
-        // 予定の開始日が今日であり，かつチェックボックスで選択されたユーザーの予定を抽出
-        var today = new Date();
-        var todayEvents = [];
-        for (var i = 0; i < events.length; i++) {
-            var event = events[i];
-            var startDate = new Date(String(event[1].split(' ')[0]));
-            var endDate = new Date(event[2]);
-
-            if (startDate.getFullYear() == today.getFullYear() && startDate.getMonth() == today.getMonth() && startDate.getDate() == today.getDate()) {
-                for (var j = 0; j < checkedUsers.length; j++) { 
-                    if (event[3][0] == checkedUsers[j][0]) {
-                        todayEvents.push([event, checkedUsers[j]]);
-                    }
-                }
-            }
-        }
-
-        // id="today-event" の要素を取得して，中身を更新
-        var todayEvent = document.getElementById('today-event');
-        todayEvent.innerHTML = '';
-        for (var i = 0; i < todayEvents.length; i++) {
-            var userEvent = document.createElement('li');
-            userEvent.style.color = todayEvents[i][1][1];
-            userEvent.textContent = todayEvents[i][0][0];
-            todayEvent.appendChild(userEvent);
-        }
-    }
-
-    // チェックボックスの全選択・全解除を行う関数
-    function checkForAll() {
-        var checked = document.querySelector('.allselect-button').checked;
-        var checkboxes = document.getElementsByClassName('user-button');
-
-        for (var i = 0; i < checkboxes.length; i++) {
-            checkboxes[i].checked = checked;
-        }
-    }
-
-    //出力ボタンが押された時
-    document.getElementById('download-btn').addEventListener('click', () => {
-        var cal =ics();
-	    //cal.addEvent('Demo Event', 'This is thirty minute event', 'Nome, AK', '8/7/2013 5:30 pm', '8/7/2013 6:00 pm');
-        //for (let i = 0;i < 2;i++)
-        //cal.addEvent(event[i][0],event[i][1],event[i][2],event[i][3],event[i][4]);
-        for (var i = 0; i < events.length; i++) {
-            var event = events[i];
-            if(event[3][0]==user[0][0]){
-                var elm = event[1].split('-');
-                var start = elm[1] + '/' + elm[2] + '/' + elm[0]; 
-                console.log(start);
-                cal.addEvent(event[0],'','',start,start);
-            }
-        }
-        console.log(cal);
-        cal.download("Event");
-    });
-
+  //出力ボタンが押された時
+  document.getElementById('download-btn').addEventListener('click', () => {
+      var cal =ics();
+   //cal.addEvent('Demo Event', 'This is thirty minute event', 'Nome, AK', '8/7/2013 5:30 pm', '8/7/2013 6:00 pm');
+      //for (let i = 0;i < 2;i++)
+      //cal.addEvent(event[i][0],event[i][1],event[i][2],event[i][3],event[i][4]);
+      for (var i = 0; i < events.length; i++) {
+          var event = events[i];
+          if(event[3][0]==user[0][0]){
+              var elm = event[1].split('-');
+              var start = elm[1] + '/' + elm[2] + '/' + elm[0];
+              console.log(start);
+              cal.addEvent(event[0],'','',start,start);
+          }
+      }
+      console.log(cal);
+      cal.download("Event");
+  });
 </script>
