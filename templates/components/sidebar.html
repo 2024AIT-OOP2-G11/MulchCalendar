@@ -12,14 +12,19 @@
   </div>
 
   <div>ユーザー選択</div>
-  <input type="checkbox" class="allselect-button" onclick="checkForAll()" />全員
-  {% for user in users %}
+  {% if users %}<input
+    type="checkbox"
+    class="allselect-button"
+    onclick="checkForAll()"
+  /><strong>全員</strong> {% for user in users %}
   <!-- ↓ VSCode だと，赤い波線が出るかも？ 問題なく動作するはず -->
   <div style="color: {{ user.color }};">
     <input type="checkbox" class="user-button" onclick="checks()" />{{ user.user
     }}
   </div>
-  {% endfor %}
+  {% endfor %} {% else %}
+  <p style="font-size: 12px; color: gray">ユーザーなし</p>
+  {% endif %}
 
   <div>今日の予定</div>
   <div>
