@@ -9,27 +9,54 @@
       href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.css"
       rel="stylesheet"
     />
+    <h1>マルチ・カレンダー</h1>
     <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
       body {
         font-family: Arial, sans-serif;
-        margin: 20px;
-        width: 100vw;
+        display: grid;
+        grid-template-areas: 
+          "header header"
+          "sidebar calendar";
+        grid-template-rows: auto 1fr;
+        grid-template-columns: 220px 1fr; /* サイドバーの横幅を203pxに設定 */
         height: 100vh;
-        display: flex;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      h1 {
+        grid-area: header;
+        background-color: #dfefff;
+        padding: 0.5rem 1rem;
+        border: dashed 2px white;
+        box-shadow: 0px 0px 0px 5px #dfefff;
+        text-align: left;
+      }
+
+      .sidebar {
+        grid-area: sidebar;
+        background-color: #f9f9f9;
+        border: 2px solid #ccc;
+        padding: 1rem;
+        height: 100%;
+        position: relative; /* ポップアップの基準位置 */
       }
 
       .calendar {
-        width: 150%;
-        max-width: 900px;
-      }
-      
-      .sidebar {
-        width: 80%;
-        height: 82vh;
-        border: 4px solid rgb(108, 108, 110);
+        grid-area: calendar;
+        background-color: #fff;
+        border: 2px solid #ccc;
+        padding: 1rem;
+        max-width: 100%;
+        overflow-y: auto;
       }
     </style>
-    <title>マルチ・カレンダー</title>
   </head>
   <body>
     <section>{% include "./components/sidebar.html" %}</section>
