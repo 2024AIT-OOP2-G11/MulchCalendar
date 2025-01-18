@@ -42,3 +42,8 @@ def edit(event_id):
         event.save()
     # indexページにリダイレクト
     return redirect(url_for('index'))
+
+
+@api_bp.route('/add', methods=['GET', 'POST'])
+def add(user_list):
+    print(user_list)

@@ -45,17 +45,28 @@
         ['終日イベント','2025-01-30','',['fe','#ff0000']],
     ]*/
     var user = []
+    var checkedUsers = [];
 
     function update() {
         // チェックボックスの状態を取得
         var checkboxes = document.getElementsByClassName('user-button');
-        var checkedUsers = [];
+        checkedUsers = [];
         for (var i = 0; i < checkboxes.length; i++) {
             if (checkboxes[i].checked) {
                 checkedUsers.push([users[i][0], users[i][1]]);
             }
         }
         user = checkedUsers
+
+        // ポップアップに選択されたユーザーを表示
+        var userDiv = document.getElementById('user');
+        userDiv.innerHTML = '';
+        for (var i = 0; i < checkedUsers.length; i++) {
+            var userElement = document.createElement('div');
+            userElement.style.color = checkedUsers[i][1];
+            userElement.textContent = checkedUsers[i][0];
+            userDiv.appendChild(userElement);
+        }
 
         // 予定の開始日が今日であり，かつチェックボックスで選択されたユーザーの予定を抽出
         var today = new Date();

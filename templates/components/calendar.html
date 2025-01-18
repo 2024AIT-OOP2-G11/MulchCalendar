@@ -28,6 +28,20 @@
       dateClick: (e) => {
         // 日付マスのクリックイベント
         console.log("dateClick:", e);
+        const popupAdd = document.getElementById('popup-add');
+        popupAdd.style.display = 'flex';
+
+        // 日付の表示
+        const date = document.getElementById('date');
+        date.textContent = e.date.toLocaleDateString();
+
+        // チェックボックスで選択されたユーザーの名前の取得
+        userNameList = checkedUsers.map((user) => user[0]);
+
+        // 追加フォームの設定
+        const addForm = document.getElementById('add');
+        const baseAddUrl = "{{ url_for('api.add', user_list=userNameList) }}";
+        addForm.action = baseAddUrl;
       },
       eventClick: (e) => {
         // イベントのクリックイベント

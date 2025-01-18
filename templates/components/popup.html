@@ -34,6 +34,23 @@
     }
 </style>
 
+<div class="popup-overlay" id="popup-add">
+    <div class="popup-content">
+        <h3>追加</h3>
+        <div id="date">
+            <!-- ここに日付を表示 -->
+        </div>
+        <div id="user">
+            <!-- ここに選択されたユーザーを表示 -->
+        </div>
+        <form method="post" id="add">
+            <input type="text" id="inputEvent" required>
+            <button type="submit">追加</button>
+        </form>
+    </div>
+    
+</div>
+
 <div class="popup-overlay" id="popup-edit">
     <div class="popup-content">
         <h3>編集</h3>
@@ -41,7 +58,7 @@
             <!-- ここに日付を表示 -->
         </div>
         <form method="post" id="edi">
-            <input type="text" id="inputEvent" required>
+            <input type="text" id="inputEvent" name="title" required>
             <button type="submit">変更</button>
         </form>
         <br>
