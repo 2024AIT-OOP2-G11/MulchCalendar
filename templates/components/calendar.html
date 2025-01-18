@@ -1,8 +1,8 @@
-<script></script>
 <div>カレンダー</div>
 <div class="calendar"></div>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  document.body.addEventListener("change", update);
+  function update() {
     const calendarEl = document.querySelector(".calendar");
     const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: "dayGridMonth", // 月表示
@@ -12,19 +12,7 @@
         center: "title",
         right: "dayGridMonth,dayGridWeek,dayGridDay",
       },
-      events: function (info, successCallback, failureCallback) {
-        // Flask APIからイベントデータを取得
-        fetch("/api/events")
-          .then((response) => response.json())
-          .then((data) => {
-            // イベントデータをFullCalendarに渡す
-            successCallback(data);
-          })
-          .catch((error) => {
-            console.error("Error fetching events:", error);
-            failureCallback(error);
-          });
-      },
+      events: transformToJSON(events, user),
       dateClick: (e) => {
         // 日付マスのクリックイベント
         console.log("dateClick:", e);
@@ -36,32 +24,41 @@
         console.log("eventClick:", e.event.id);
         clickedEvent = e.event;
 
-        const popupEdit = document.getElementById('popup-edit');
-        popupEdit.style.display = 'flex';
+        const popupEdit = document.getElementById("popup-edit");
+        popupEdit.style.display = "flex";
 
         // イベントの日付の表示
-        const date = document.getElementById('date');
+        const date = document.getElementById("date");
         date.textContent = clickedEvent.start.toLocaleDateString();
 
         // 編集フォームの設定
-        const ediForm = document.getElementById('edi');
+        const ediForm = document.getElementById("edi");
         const baseEdiUrl = "{{ url_for('api.edit', event_id=-1) }}";
         ediForm.action = baseEdiUrl.replace("-1", clickedEvent.id);
-        const inputEvent = document.getElementById('inputEvent');
+        const inputEvent = document.getElementById("inputEvent");
         inputEvent.value = clickedEvent.title;
-        const delForm = document.getElementById('del');
+        const delForm = document.getElementById("del");
         const baseDelUrl = "{{ url_for('api.delete', event_id=-1) }}";
         delForm.action = baseDelUrl.replace("-1", clickedEvent.id);
       },
     });
 
     calendar.render();
-  });
+  }
+  document.addEventListener("DOMContentLoaded", update);
+
+  function transformToJSON(inputData, users) {
+    const userNames = users.map((user) => user[0]); // ユーザー名リストを取得
+    return inputData
+      .filter((event) => userNames.includes(event[3][0])) // ユーザー名でフィルター
+      .map((event) => {
+        return {
+          title: event[0], // イベント名
+          start: event[1].split(" ")[0], // 開始日（時刻を除去）
+          end: event[2].split(" ")[0], // 終了日（時刻を除去）
+          backgroundColor: event[3][1], // 背景色
+          borderColor: event[3][1], // 枠線色
+        };
+      });
+  }
 </script>
-
-
-
-
-
-
-
