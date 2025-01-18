@@ -16,6 +16,29 @@
       dateClick: (e) => {
         // 日付マスのクリックイベント
         console.log("dateClick:", e);
+
+        if (checkedUsers.length === 0) {
+          alert("ユーザーを選択してください");
+          return;
+        }
+
+        // 日付の表示
+        const date = document.getElementById("date");
+        date.textContent = e.date.toLocaleDateString();
+        // 選択されているユーザーの表示
+        const selectedUser = document.getElementById("selected-user");
+        selectedUser.textContent = checkedUsers.map((user) => user[0]).join(",");
+
+        // 非表示のフォームに日付とユーザー情報を設定
+        const invisible = document.getElementById("invisible");
+        const start = invisible.children[0];
+        start.value = e.date.toLocaleDateString();
+        const userCsv = invisible.children[1];
+        userCsv.value = checkedUsers.map((user) => user[0]).join(",");
+
+        // ポップアップの表示
+        const popupAdd = document.getElementById("popup-add");
+        popupAdd.style.display = "flex";
       },
       eventClick: (e) => {
         // イベントのクリックイベント

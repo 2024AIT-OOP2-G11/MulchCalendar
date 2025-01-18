@@ -68,12 +68,13 @@
         ['終日イベント','2025-01-20','',['fe','#ff0000']],
         ['終日イベント','2025-01-30','',['fe','#ff0000']],
     ]*/
+   var checkedUsers = [];
     var user = []
 
     function update() {
         // チェックボックスの状態を取得
         var checkboxes = document.getElementsByClassName('user-button');
-        var checkedUsers = [];
+        checkedUsers = [];
         for (var i = 0; i < checkboxes.length; i++) {
             if (checkboxes[i].checked) {
                 checkedUsers.push([users[i][0], users[i][1]]);
