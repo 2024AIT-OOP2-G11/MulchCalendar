@@ -45,47 +45,92 @@
         .popup-header {
             margin-bottom: 20px;
         }
-        .breadcrumb {
-            padding: 0;
-            margin-bottom: 2rem;
-            list-style: none;
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url(../static/book.jpeg);
+            background-size: cover;
+            /* background-repeat: repeat; */
+            /* background-position: center; */
         }
-        .breadcrumb li {
-            display: inline;
+
+        .siro {
+            background-color: rgba(255, 255, 255, 0.8); /* 背景の白色と透明度 */
+            padding: 30px; /* 内側の余白 */
+            border-radius: 10px; /* 角を丸くする */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 軽い影を追加 */
+            text-align: center; /* コンテンツを中央揃え */
+            width: 90%; /* コンテナの幅 */
+            max-width: 500px; /* 最大幅 */
         }
-        .breadcrumb li::after {
-            content: " > ";
+
+        .title {
+            font-size: 60px; /* フォントサイズ */
+            margin: 20px 0; /* タイトル下に余白を追加 */
+            position: absolute; /* 固定位置に配置 */
+            top: 20px; /* 上からの距離 */
+            left: 50%; /* 水平方向の中央揃え */
+            transform: translateX(-50%); /* 中央に揃えるための調整 */
         }
-        .breadcrumb li:nth-last-child()::after {
-            content: "";
+
+        .edit {
+            width: auto;
+            height: auto;
+            justify-content: center;
+            align-items: center;
         }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .edit button {
+            font-size: 18px;
+        }
+        
+        a {
+            position: absolute; /* 固定位置に配置 */
+            top: 10px; /* 上からの距離 */
+            left: 10px; /* 左からの距離 */
+            font-size: 18px; /* フォントサイズ */
+            text-decoration: none; /* 下線を削除 */
+            color: #007BFF; /* テキストの色 */
+            background-color: rgba(255, 255, 255, 0.8); /* 背景色 */
+            padding: 5px 10px; /* 内側の余白 */
+            border-radius: 5px; /* 角を丸くする */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 軽い影を追加 */
+        }
+        
     </style>
 </head>
 <body>
-    <table>
-        <thead>
-            <tr>
-                <th>ユーザー</th>
-                <th>色</th>
-                <th>&nbsp;</th>
-            </tr>
-        </thead>
-        <tbody>
-            <h1>ユーザー編集</h1>
-            <ul class="breadcrumb">
-                <li><a href="{{ url_for('index') }}">HOME</a></li>
-                <li>ユーザー編集</li>
-            </ul>
-
-            {% for user in items %}
-            <tr>
-                <td>{{ user.user }}</td>
-                <td><div style="background-color: {{ user.color }}; width: 47px; height: 22px;"></div></td>
-                <td>
-                    <button class="open-popup" data-id="{{ user.id }}">編集</button>
-                </td>
-            </tr>
-            {% endfor %}
+    <a href="{{ url_for('index') }}">HOME</a>
+    <div class="siro">
+        <h1 class="title">ユーザー編集</h1>
+            <table>
+                <tbody>
+                    {% for user in items %}
+                    <tr class="edit">
+                        <td>{{ user.user }}</td>
+                        <td><div style="background-color: {{ user.color }}; width: 47px; height: 22px;"></div></td>
+                        <td>
+                            <button class="open-popup" data-id="{{ user.id }}">編集</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+    </div>
 
 
             <div class="popup-overlay" id="popupOverlay">
@@ -144,8 +189,5 @@
                 });
 
             </script>
-        </tbody>
-    </table>
-    
 </body>
 </html>
