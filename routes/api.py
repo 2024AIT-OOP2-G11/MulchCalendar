@@ -1,6 +1,7 @@
 from flask import Blueprint,jsonify, redirect, url_for, request
 from models import Event
 from models import User
+from datetime import datetime
 
 api_bp = Blueprint("api", __name__, url_prefix='/api')
 
@@ -53,3 +54,20 @@ def edit(event_id):
     # indexページにリダイレクト
     return redirect(url_for('index'))
   
+@api_bp.route('/add', methods=['POST'])
+def add():
+    title = request.form['title']
+    start = request.form['start']
+    usr_list = request.form['user-csv'].split(',')
+    # print(title)
+    # print(start)
+    # print(usr_list)
+
+    for user in usr_list:
+        user_id = User.get_or_none(User.user == user)
+        # dateを「2025/01/01」から「2025-01-01」のように変換
+        date = start.replace('/', '-')
+        # イベントを追加
+        Event.create(title=title, start=date, end=date, user=user_id)
+
+    return redirect(url_for('index'))
