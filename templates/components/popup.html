@@ -32,7 +32,32 @@
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     }
+
+    #invisible {
+        display: none;
+    }
+    
 </style>
+
+<div class="popup-overlay" id="popup-add">
+    <div class="popup-content">
+        <h3>追加</h3>
+        <form method="post" action="{{ url_for('api.add') }}" id="add">
+            <div id="date">
+                <!-- ここに日付を表示 -->
+            </div>
+            <div id="selected-user" style="display: none;">
+                <!-- ここに選択されたユーザーを表示 -->
+            </div>
+            <div id="invisible">
+                <input type="text" name="start" required>
+                <input type="text" name="user-csv" required>
+            </div>
+            予定を入力: <input type="text" name="title" required>
+            <button type="submit">追加</button>
+        </form>
+    </div>
+</div>
 
 <div class="popup-overlay" id="popup-edit">
     <div class="popup-content">
