@@ -16,10 +16,11 @@
     type="checkbox"
     class="allselect-button"
     onclick="checkForAll()"
+    checked
   /><strong>全員</strong> {% for user in users %}
   <!-- ↓ VSCode だと，赤い波線が出るかも？ 問題なく動作するはず -->
   <div style="color: {{ user.color }};">
-    <input type="checkbox" class="user-button" onclick="checks()" />{{ user.user
+    <input type="checkbox" class="user-button" onclick="checks()" checked/>{{ user.user
     }}
   </div>
   {% endfor %} {% else %}

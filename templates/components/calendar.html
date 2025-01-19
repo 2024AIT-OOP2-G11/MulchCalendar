@@ -1,8 +1,21 @@
-<script></script>
-<div>カレンダー</div>
 <div class="calendar"></div>
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  document.addEventListener("DOMContentLoaded", () => {
+    // 初期状態のチェックボックスから user を設定
+    const checkboxes = document.getElementsByClassName('user-button');
+    const checkedUsers = [];
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i].checked) {
+        checkedUsers.push([users[i][0], users[i][1]]);
+      }
+    }
+    user = checkedUsers;
+  
+    // 初期状態でカレンダーを描画
+    update();
+  });
+  document.body.addEventListener("change", update);
+  function update() {
     const calendarEl = document.querySelector(".calendar");
     const calendar = new FullCalendar.Calendar(calendarEl, {
       initialView: "dayGridMonth", // 月表示
@@ -12,19 +25,7 @@
         center: "title",
         right: "dayGridMonth,dayGridWeek,dayGridDay",
       },
-      events: function (info, successCallback, failureCallback) {
-        // Flask APIからイベントデータを取得
-        fetch("/api/events")
-          .then((response) => response.json())
-          .then((data) => {
-            // イベントデータをFullCalendarに渡す
-            successCallback(data);
-          })
-          .catch((error) => {
-            console.error("Error fetching events:", error);
-            failureCallback(error);
-          });
-      },
+      events: transformToJSON(events, user),
       dateClick: (e) => {
         // 日付マスのクリックイベント
         console.log("dateClick:", e);
@@ -56,7 +57,21 @@
     });
 
     calendar.render();
-  });
+  }
+  function transformToJSON(inputData, users) {
+    const userNames = users.map((user) => user[0]); // ユーザー名リストを取得
+    return inputData
+      .filter((event) => userNames.includes(event[3][0])) // ユーザー名でフィルター
+      .map((event) => {
+        return {
+          title: event[0], // イベント名
+          start: event[1].split(" ")[0], // 開始日（時刻を除去）
+          end: event[2].split(" ")[0], // 終了日（時刻を除去）
+          backgroundColor: event[3][1], // 背景色
+          borderColor: event[3][1], // 枠線色
+        };
+      });
+  }
 </script>
 
 
