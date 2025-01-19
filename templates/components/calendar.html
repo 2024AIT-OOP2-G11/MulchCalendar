@@ -1,7 +1,22 @@
-<div>カレンダー</div>
 <div class="calendar"></div>
 <script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // 初期状態のチェックボックスから user を設定
+    const checkboxes = document.getElementsByClassName('user-button');
+    const checkedUsers = [];
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i].checked) {
+        checkedUsers.push([users[i][0], users[i][1]]);
+      }
+    }
+    user = checkedUsers;
+  
+    // 初期状態でカレンダーを描画
+    update();
+  });
+
   document.body.addEventListener("change", update);
+  
   function update() {
     const calendarEl = document.querySelector(".calendar");
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -45,7 +60,6 @@
 
     calendar.render();
   }
-  document.addEventListener("DOMContentLoaded", update);
 
   function transformToJSON(inputData, users) {
     const userNames = users.map((user) => user[0]); // ユーザー名リストを取得
