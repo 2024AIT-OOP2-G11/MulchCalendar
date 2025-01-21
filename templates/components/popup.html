@@ -15,6 +15,18 @@
         justify-content: center;
         align-items: center;
     }
+    .popup-overlay-edi {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 100;
+        justify-content: center;
+        align-items: center;
+    }
 
     .popup-content {
         /* display: flex; */
@@ -59,18 +71,22 @@
     </div>
 </div>
 
-<div class="popup-overlay" id="popup-edit">
+<div class="popup-overlay-edi" id="popup-edit">
     <div class="popup-content">
         <h3>編集</h3>
         <div id="date">
             <!-- ここに日付を表示 -->
         </div>
-        <form method="post" id="edi">
-            <input type="text" id="inputEvent" required>
+        <form method="post" action="{{ url_for('api.edit') }}" id="edi">
+            <input type="text" id="inputStart" name="start" required style="display: none;">
+            <input type="text" id="inputEvent" name="title" required style="display: none;">
+            <input type="text" id="inputReEvent" name="re-title" required>
             <button type="submit">変更</button>
         </form>
         <br>
-        <form method="post" id="del">
+        <form method="post" action="{{ url_for('api.delete') }}" id="del">
+            <input type="text" id="delStart" name="start" required style="display: none;">
+            <input type="text" id="delEvent" name="title" required style="display: none;">
             <button type="submit" onclick="return confirm('本当に削除しますか？');">削除</button>
         </form>
     </div>
@@ -83,6 +99,13 @@
     popupOverlay.addEventListener('click', (e) => {
         if (e.target === popupOverlay) {
             popupOverlay.style.display = 'none';
+        }
+    });
+    // popup-overlay-ediのクリックイベント
+    const popupOverlayEdi = document.querySelector('.popup-overlay-edi');
+    popupOverlayEdi.addEventListener('click', (e) => {
+        if (e.target === popupOverlayEdi) {
+            popupOverlayEdi.style.display = 'none';
         }
     });
 </script>

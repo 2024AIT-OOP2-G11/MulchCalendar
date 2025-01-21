@@ -32,24 +32,28 @@ def get_user(user_id):
         })
     return
   
-@api_bp.route('/delete/<int:event_id>', methods=['POST'])
-def delete(event_id):
-    # 指定されたIDの予定を取得
-    event = Event.get_or_none(Event.id == event_id)
+@api_bp.route('/delete', methods=['POST'])
+def delete():
+    # 時間及び件名が一致するすべてのイベントを取得
+    title = request.form['title']
+    start = request.form['start']
+    event = Event.get_or_none(Event.start == start, Event.title == title)
     if event:
-        event.delete_instance()  # 予定を削除
+        event.delete_instance()
     # indexページにリダイレクト
     return redirect(url_for('index'))
 
-@api_bp.route('/edit/<int:event_id>', methods=['POST'])
-def edit(event_id):
-    # 指定されたIDの予定を取得
-    event = Event.get_or_none(Event.id == event_id)
+@api_bp.route('/edit', methods=['POST'])
+def edit():
+    # 時間及び件名が一致するすべてのイベントを取得
+    start = request.form['start']
+    title = request.form['title']
+    event = Event.get_or_none(Event.start == start, Event.title == title)
     if event:
         # リクエストのデータを取得
-        title = request.form['title']
+        re_title = request.form['re-title']
         # データを更新
-        event.title = title
+        event.title = re_title
         event.save()
     # indexページにリダイレクト
     return redirect(url_for('index'))
