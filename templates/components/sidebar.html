@@ -51,6 +51,9 @@
   <script src="https://cdn.jsdelivr.net/gh/nwcell/ics.js/ics.deps.min.js"></script>
 </div>
 <script>
+    // ロード時にupdate()を呼び出す
+    document.addEventListener('DOMContentLoaded', update);
+
   const listItems = document.querySelectorAll('#user li');
 
   listItems.forEach( item => {
@@ -120,15 +123,23 @@
           }
       }
 
-      // id="today-event" の要素を取得して，中身を更新
-      var todayEvent = document.getElementById('today-event');
-      todayEvent.innerHTML = '';
-      for (var i = 0; i < todayEvents.length; i++) {
-          var userEvent = document.createElement('li');
-          userEvent.style.color = todayEvents[i][1][1];
-          userEvent.textContent = todayEvents[i][0][0];
-          todayEvent.appendChild(userEvent);
+      if (todayEvents.length == 0) {
+        var todayEvent = document.getElementById('today-event');
+        todayEvent.innerHTML = 'なし';
+        todayEvent.style.color = 'gray';
+      } else {
+        // id="today-event" の要素を取得して，中身を更新
+        var todayEvent = document.getElementById('today-event');
+        todayEvent.innerHTML = '';
+        for (var i = 0; i < todayEvents.length; i++) {
+            var userEvent = document.createElement('li');
+            userEvent.style.color = todayEvents[i][1][1];
+            userEvent.textContent = todayEvents[i][0][0];
+            todayEvent.appendChild(userEvent);
+        }
       }
+
+      
   }
 
   // チェックボックスの全選択・全解除を行う関数
@@ -139,6 +150,7 @@
       for (var i = 0; i < checkboxes.length; i++) {
           checkboxes[i].checked = checked;
       }
+      update();
   }
   // チェックボックスが1つでも外された時の全選択解除
   function checks() {
