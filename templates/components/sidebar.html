@@ -1,5 +1,17 @@
+<style>
+    #download-btn {
+        margin-top: 25px;
+        padding: 15px;
+        background-color: #447cbd;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        cursor: pointer;
+        color: white;
+        font-size: 20px;
+    }
+</style>
 <div class="sidebar">
-  <h3>サイドバー</h3>
+  <h3>サイドバー</h3><br>
   <div id="user">
     <li class="user-point">
       ユーザー登録
@@ -10,8 +22,8 @@
       </ul>
     </li>
   </div>
-
-  <div>ユーザー選択</div>
+  <br>
+  <div style="border-bottom: 1px solid #ccc;">ユーザー選択</div>
   {% if users %}<input
     type="checkbox"
     class="allselect-button"
@@ -26,14 +38,15 @@
   {% endfor %} {% else %}
   <p style="font-size: 12px; color: gray">ユーザーなし</p>
   {% endif %}
-
-  <div>今日の予定</div>
+  
+  <br>
+  <div style="border-bottom: 1px solid #ccc;">今日の予定</div>
   <div>
     <ul id="today-event">
       <!-- ここにチェックボックスで選択されたユーザーの予定を箇条書きかつ色付きで表示 -->
     </ul>
   </div>
-
+  <br><br><br>
   <button id="download-btn">ファイルに出力</button>
   <script src="https://cdn.jsdelivr.net/gh/nwcell/ics.js/ics.deps.min.js"></script>
 </div>
