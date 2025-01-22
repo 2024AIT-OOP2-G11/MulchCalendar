@@ -94,6 +94,7 @@
   ]*/
   var checkedUsers = [];
   var user = []
+  var flag = new Boolean(true);//一件目の予定が追加されたかのフラグ
 
   function update() {
       // チェックボックスの状態を取得
@@ -172,7 +173,8 @@
 
   //出力ボタンが押された時
   document.getElementById('download-btn').addEventListener('click', () => {
-      var cal =ics();
+    var cal = ics();
+   
       //cal.addEvent('Demo Event', 'This is thirty minute event', 'Nome, AK', '8/7/2013 5:30 pm', '8/7/2013 6:00 pm');
       //for (let i = 0;i < 2;i++)
       //cal.addEvent(event[i][0],event[i][1],event[i][2],event[i][3],event[i][4]);
@@ -180,19 +182,31 @@
       //予定を追加
       for (var i = 0; i < events.length; i++) {
           var event = events[i];
-
           //チェックボックスに一人しか入っていない想定
-          if(event[3][0]==user[0][0]){
-              var elm = event[1].split(/[-\s]/);//-と空白で区切り
-              var start = elm[1] + '/' + elm[2] + '/' + elm[0];// MM/DD/YYYY
-              //console.log(start);
-              cal.addEvent(event[0],'','',start,start);
-          }
-          //二件目に空の予定を追加
-          if(i == 0)
-           cal.addEvent(' ','','',start,start);
-      }
-      //console.log(cal.events());
+          /*if(event[3][0]==user[0][0]){
+            var elm = event[1].split(/[-\s]/);//-と空白で区切り
+            var start = elm[1] + '/' + elm[2] + '/' + elm[0];// MM/DD/YYYY
+            //console.log(start);
+            cal.addEvent(event[0],'','',start,start);
+          }*/
+          //チェックボックスに二人以上入っている場合
+          var username;
+          for(var j = 0; j < checkedUsers.length; j++){
+            if(event[3][0]==checkedUsers[j][0]){
+                username = checkedUsers[j][0];
+                var elm = event[1].split(/[-\s]/);//-と空白で区切り
+                var start = elm[1] + '/' + elm[2] + '/' + elm[0];// MM/DD/YYYY
+                //console.log(start);
+                cal.addEvent(event[0],username,'',start,start);//詳細のところにユーザー名を入れて誰の予定かわかるように
+                if(flag){
+                    cal.addEvent(' ','','',start,start);
+                    flag = false;
+                }
+            }
+        }
+    }
+      console.log(cal.events());
       cal.download("Event");
+      delete cal;//calをリセット
   });
 </script>
