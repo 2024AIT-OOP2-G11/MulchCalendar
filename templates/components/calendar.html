@@ -69,14 +69,16 @@
         date.textContent = clickedEvent.start.toLocaleDateString();
 
         // 編集フォームの設定
-        const ediForm = document.getElementById("edi");
-        const baseEdiUrl = "{{ url_for('api.edit', event_id=-1) }}";
-        ediForm.action = baseEdiUrl.replace("-1", clickedEvent.id);
+        const inputStart = document.getElementById("inputStart");
+        inputStart.value = e.event.start.toLocaleDateString().replace(/\//g, "-");
         const inputEvent = document.getElementById("inputEvent");
         inputEvent.value = clickedEvent.title;
-        const delForm = document.getElementById("del");
-        const baseDelUrl = "{{ url_for('api.delete', event_id=-1) }}";
-        delForm.action = baseDelUrl.replace("-1", clickedEvent.id);
+        const inputReEvent = document.getElementById("inputReEvent");
+        inputReEvent.value = inputEvent.value;
+        const delStart = document.getElementById("delStart");
+        delStart.value = e.event.start.toLocaleDateString().replace(/\//g, "-");
+        const delEvent = document.getElementById("delEvent");
+        delEvent.value = clickedEvent.title;
       },
     });
 
